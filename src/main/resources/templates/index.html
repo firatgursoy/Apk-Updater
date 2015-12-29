@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>GNO</title>
+
+    <link href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+
+    <script src="/js/jquery.min.js" th:href="@{/js/jquery.min.js}"></script>
+    <script src="/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+
+    <style>.btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }</style>
+</head>
+<body>
+
+
+<div class="container">
+    <div class="row row-centered">
+
+        <div>
+            <div class="col-lg-12">
+                <div class="panel panel-default ">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" id="panel-title"></h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="table" th:if="${projectcontext.projects.size()>0}">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Package Name</th>
+                                <th class="text-center">Download Last Release</th>
+                                <th class="text-center">Remove</th>
+                                <th class="text-center">Upload New Release</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="project : ${projectcontext.projects}">
+                                <form class="form-inline" enctype="multipart/form-data" role="form" action="#" th:action="@{uploadProject}"
+                                      method="POST">
+
+                                    <td th:text="${project.name}"></td>
+                                    <td >   <input th:hidden="true" name="packageName" id="packageName" th:text="${project.packageName}" th:value="${project.packageName}"></input></td>
+
+                                    <td class="text-center">
+                                        <div th:if="${project.lastRelease} != null">
+                                            <div th:text="${project.lastRelease.date}"></div>
+                                        </div>
+
+                                        <a
+                                            th:href="${'/downloadLastVersionByPackageName?packageName='+project.packageName}">
+                                        <button type="button" title="Remove"
+                                                class="btn btn-primary glyphicon glyphicon-download"></button>
+                                    </a>
+
+                                    </td>
+                                    <td class="text-center"><a
+                                            th:href="${'/deleteProject?packageName='+project.packageName}">
+                                        <button type="button" title="Remove"
+                                                class="btn btn-danger glyphicon glyphicon-remove"></button>
+                                    </a></td>
+
+                                    <td class="text-center">
+                                        <div class="form-group">
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Release Name"></input>
+                                            </div>
+                                        <span class="btn btn-default btn-file">  Select File<input name="file"
+                                                                                                   type="file"/></span>
+                                        <button type="submit" title="Upload"
+                                                class="btn btn-success glyphicon glyphicon-upload"></button>
+
+
+                                    </td>
+
+                                </form>
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" action="#" th:action="@{createProject}" th:object="${project}" method="POST">
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Name" name="name"
+                                           th:field="${project.name}" type="text"
+                                           value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Package Name" name="packageName"
+                                           th:field="${project.packageName}" type="text"
+                                           value=""/>
+                                </div>
+
+                            </fieldset>
+
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Create Project</button>
+
+
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+</body>
+</html>
